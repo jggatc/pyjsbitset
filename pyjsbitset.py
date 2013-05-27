@@ -13,7 +13,7 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#PyjsBitset version 1.0
+#PyjsBitset version 0.5
 #Project Site: http://gatc.ca
 
 import math
