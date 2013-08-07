@@ -33,6 +33,7 @@ class BitSet:
     def __init__(self, width=None):
         if not BitSet.__bitmask:
             BitSet.__bitmask = dict([(BitSet.__bit-i-1,1<<i) for i in range(BitSet.__bit-1,-1,-1)])
+            BitSet.__bitmask[BitSet.__bit-1] = int(BitSet.__bitmask[BitSet.__bit-1])      #pyjs [1<<0] = 1L
         if width:
             self.__width = abs(width)
         else:
