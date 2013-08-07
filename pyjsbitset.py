@@ -263,6 +263,7 @@ class BitSet:
         new_bitset = BitSet(1)
         data = BitSet.__typedarray(self.__data)
         new_bitset.__data = data
+        new_bitset.__width = self.__width
         return new_bitset
 
 
