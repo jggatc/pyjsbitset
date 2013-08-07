@@ -31,14 +31,14 @@ class BitSet:
     __typedarray = PyUint8Array
 
     def __init__(self, width=None):
-        if not BitSet.__bitmask:
-            BitSet.__bitmask = dict([(BitSet.__bit-i-1,1<<i) for i in range(BitSet.__bit-1,-1,-1)])
-            BitSet.__bitmask[BitSet.__bit-1] = int(BitSet.__bitmask[BitSet.__bit-1])      #pyjs [1<<0] = 1L
+        if not self.__class__.__bitmask:
+            self.__class__.__bitmask = dict([(self.__class__.__bit-i-1,1<<i) for i in range(self.__class__.__bit-1,-1,-1)])
+            self.__class__.__bitmask[self.__class__.__bit-1] = int(self.__class__.__bitmask[self.__class__.__bit-1])      #pyjs [1<<0] = 1L
         if width:
             self.__width = abs(width)
         else:
-            self.__width = BitSet.__bit
-        self.__data = BitSet.__typedarray( math.ceil(self.__width/(BitSet.__bit*1.0)) )
+            self.__width = self.__bit
+        self.__data = self.__typedarray( math.ceil(self.__width/(self.__bit*1.0)) )
 
     def __str__(self):
         """
@@ -97,20 +97,20 @@ class BitSet:
             else:
                 size = toIndex-index
                 if size > 0:
-                    return BitSet(size)
+                    return self.__class__(size)
                 else:   #use exception
                     return None
         if toIndex is None:
-            return bool( self.__data[ int(index/BitSet.__bit) ] & BitSet.__bitmask[ index%BitSet.__bit ] )
+            return bool( self.__data[ int(index/self.__bit) ] & self.__bitmask[ index%self.__bit ] )
         else:
             size = toIndex-index
             if size > 0:
-                bitset = BitSet(size)
+                bitset = self.__class__(size)
                 ix = 0
                 if toIndex > self.__width:
                     toIndex = self.__width
                 for i in xrange(index, toIndex):
-                    bitset.set(ix, bool( self.__data[ int(i/BitSet.__bit) ] & BitSet.__bitmask[ i%BitSet.__bit ] ))
+                    bitset.set(ix, bool( self.__data[ int(i/self.__bit) ] & self.__bitmask[ i%self.__bit ] ))
                     ix += 1
                 return bitset
             else:    #use exception
@@ -127,11 +127,11 @@ class BitSet:
             else:
                 return
         if value:
-            self.__data[ int(index/BitSet.__bit) ] = self.__data[ int(index/BitSet.__bit) ] | BitSet.__bitmask[ index%BitSet.__bit ]
-#            self.__data[ int(index/BitSet.__bit) ] |= BitSet.__bitmask[ index%BitSet.__bit ]    #pyjs -O: |= not processed
+            self.__data[ int(index/self.__bit) ] = self.__data[ int(index/self.__bit) ] | self.__bitmask[ index%self.__bit ]
+#            self.__data[ int(index/self.__bit) ] |= self.__bitmask[ index%self.__bit ]    #pyjs -O: |= not processed
         else:
-            self.__data[ int(index/BitSet.__bit) ] = self.__data[ int(index/BitSet.__bit) ] & ~(BitSet.__bitmask[ index%BitSet.__bit ])
-#            self.__data[ int(index/BitSet.__bit) ] &= ~(BitSet.__bitmask[ index%BitSet.__bit ])     #pyjs -O: &= not processed
+            self.__data[ int(index/self.__bit) ] = self.__data[ int(index/self.__bit) ] & ~(self.__bitmask[ index%self.__bit ])
+#            self.__data[ int(index/self.__bit) ] &= ~(self.__bitmask[ index%self.__bit ])     #pyjs -O: &= not processed
         return None
 
     def clear(self, index=None, toIndex=None):
@@ -225,24 +225,24 @@ class BitSet:
         """
         if width > self.__width:
             self.__width = width
-            if self.__width > len(self.__data) * BitSet.__bit:
-                array = BitSet.__typedarray( math.ceil(self.__width/(BitSet.__bit*1.0)) )
+            if self.__width > len(self.__data) * self.__bit:
+                array = self.__typedarray( math.ceil(self.__width/(self.__bit*1.0)) )
                 array.set(self.__data)
                 self.__data = array
         elif width < self.__width:
             if width < len(self):
                 width = len(self)
             self.__width = width
-            if self.__width <= len(self.__data) * BitSet.__bit - BitSet.__bit:
-                array = BitSet.__typedarray( math.ceil(self.__width/(BitSet.__bit*1.0)) )
-                array.set(self.__data.subarray(0,math.ceil(self.__width/(BitSet.__bit*1.0))))
+            if self.__width <= len(self.__data) * self.__bit - self.__bit:
+                array = self.__typedarray( math.ceil(self.__width/(self.__bit*1.0)) )
+                array.set(self.__data.subarray(0,math.ceil(self.__width/(self.__bit*1.0))))
                 self.__data = array            
 
     def size(self):
         """
         Return bits used by BitSet storage array.
         """
-        return len(self.__data) * BitSet.__bit
+        return len(self.__data) * self.__bit
 
     def isEmpty(self):
         """
@@ -258,8 +258,8 @@ class BitSet:
         """
         Return a copy of the BitSet.
         """
-        new_bitset = BitSet(1)
-        data = BitSet.__typedarray(self.__data)
+        new_bitset = self.__class__(1)
+        data = self.__typedarray(self.__data)
         new_bitset.__data = data
         new_bitset.__width = self.__width
         return new_bitset
@@ -270,10 +270,11 @@ class BitSet16(BitSet):
     BitSet using PyUint16Array.
     """
     __bit = 16
+    __bitmask = None
     __typedarray = PyUint16Array
     
     def __init__(self, width=None):
-        BitSet.__init__(width)
+        BitSet.__init__(self, width)
 
 
 class BitSet32(BitSet):
@@ -281,8 +282,9 @@ class BitSet32(BitSet):
     BitSet using PyUint32Array.
     """
     __bit = 32
+    __bitmask = None
     __typedarray = PyUint32Array
     
     def __init__(self, width=None):
-        BitSet.__init__(width)
+        BitSet.__init__(self, width)
 
