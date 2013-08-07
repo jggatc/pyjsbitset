@@ -23,7 +23,7 @@ from pyjsarray import PyUint8Array, PyUint16Array, PyUint32Array
 class BitSet:
 
     """
-    BitSet provides a bitset object to use in a Python-to-JavaScript application. It uses the PyUint8Array implementation of the JavaScript Uint8Array 8-bit typedarray. BitSet16 and BitSet32 stores data in the PyUint16Array (16-bit) and PyUint32Array (32-bit) that implement the Uint16Array and Uint32Array typedarray. The BitSet will dynamically expand to hold the bits required, an optional width argument define number of bits the BitSet instance will initially hold.  
+    BitSet provides a bitset object to use in a Python-to-JavaScript application. It uses the PyUint8Array implementation of the JavaScript Uint8Array 8-bit typedarray. BitSet16 and BitSet32 stores data in PyUint16Array (16-bit) and PyUint32Array (32-bit) that implement the Uint16Array and Uint32Array typedarray. The BitSet will dynamically expand to hold the bits required, an optional width argument define number of bits the BitSet instance will initially hold.
     """
 
     __bit = 8
@@ -156,7 +156,7 @@ class BitSet:
     def flip(self, index, toIndex=None):
         """
         Flip the state of the bit.
-        Argument index is the bit index to flip, and toIndex to flip a range of bits
+        Argument index is the bit index to flip, and toIndex to flip a range of bits.
         """
         if toIndex is None:
             self.set(index, not self.get(index))
@@ -184,7 +184,7 @@ class BitSet:
     def intersects(self, bitset):
         """
         Check if set bits in this BitSet are also set in the bitset argument.
-        Return True if bitsets intersect, other return False.
+        Return True if bitsets intersect, otherwise return False.
         """
         for byte in xrange(len(bitset.__data)):
             if bitset.__data[byte] & self.__data[byte]:
@@ -193,34 +193,31 @@ class BitSet:
 
     def andSet(self, bitset):
         """
-        BitSet and BitSet
+        BitSet and BitSet.
         """
         bytes = min(len(self.__data), len(bitset.__data))
         for byte in xrange(bytes):
             self.__data[byte] = self.__data[byte] & bitset.__data[byte]
 #            self.__data[byte] &= bitset.__data[byte]     #pyjs -O: &= not processed
 #        pyjs -S: &= calls __and__ instead of __iand__, -O: no call to operator methods
-#        return self
 
     def orSet(self, bitset):
         """
-        BitSet or BitSet
+        BitSet or BitSet.
         """
         bytes = min(len(self.__data), len(bitset.__data))
         for byte in xrange(bytes):
             self.__data[byte] = self.__data[byte] | bitset.__data[byte]
 #            self.__data[byte] |= bitset.__data[byte]    #pyjs -O: |= not processed
-#        return self
 
     def xorSet(self, bitset):
         """
-        BitSet xor BitSet
+        BitSet xor BitSet.
         """
         bytes = min(len(self.__data), len(bitset.__data))
         for byte in xrange(bytes):
             self.__data[byte] = self.__data[byte] ^ bitset.__data[byte]
 #            self.__data[byte] ^= bitset.__data[byte]    #pyjs -O: |= not processed
-#        return self
 
     def resize(self, width):
         """
@@ -250,7 +247,7 @@ class BitSet:
     def isEmpty(self):
         """
         Check whether any bit is set.
-        Return True if none set, other return False.
+        Return True if none set, otherwise return False.
         """
         for data in self.__data:
             if data:
