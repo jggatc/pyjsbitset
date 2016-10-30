@@ -6,5 +6,5 @@ PyjsBitset is released under the MIT License, see license.txt for further inform
 
 PyjsBitset docs: http://gatc.ca/projects/pyjsdl/doc/
 
-The module is depreciated and transferred into the PyjsArray module (https://github.com/jggatc/pyjsarray).
+The module is depreciated and transferred into PyjsArray (https://github.com/jggatc/pyjsarray).
 
